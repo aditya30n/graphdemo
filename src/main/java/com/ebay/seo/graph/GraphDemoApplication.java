@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 
 @SpringBootApplication
-@EntityScan("movies.spring.data.neo4j.domain")
+@EntityScan("com.ebay.seo.graph.domain")
 public class GraphDemoApplication {
 
 	public static void main(String[] args) {

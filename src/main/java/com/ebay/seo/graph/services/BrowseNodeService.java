@@ -15,7 +15,7 @@ public class BrowseNodeService {
     @Autowired
     BrowseNodeRepository bnRepository;
 
-//    private Map<String, Object> toD3Format(Collection<Movie> movies) {
+//    private Map<String, Object> toD3Format(Collection<BrowseNode> bn) {
 //        List<Map<String, Object>> nodes = new ArrayList<>();
 //        List<Map<String, Object>> rels = new ArrayList<>();
 //        int i = 0;
@@ -46,12 +46,19 @@ public class BrowseNodeService {
     }
 
     @Transactional(readOnly = true)
-    public Map<String, Object>  graph(int limit) {
+    public Map<String, Object>  graph() {
+        Collection<BrowseNode> result = bnRepository.graph();
+
         List<Map<String, Object>> nodes = new ArrayList<>();
         List<Map<String, Object>> rels = new ArrayList<>();
-        nodes.add(map("title", "test", "label", "test2"));
+        Iterator<BrowseNode> iter = result.iterator();
+        while (iter.hasNext()) {
+            BrowseNode bn = iter.next();
+            nodes.add(map("title",bn.getTitle(),"label","title"));
+        }
+//        nodes.add(map("title", "test", "label", "test2"));
         return map("nodes", nodes, "links", rels);
-//        Collection<BrowseNode> result = bnRepository.graph(limit);
+
 //        return toD3Format(result);
 
     }

@@ -20,6 +20,6 @@ public class BrowseNodeController {
 
     @RequestMapping("/graph")
     public Map<String, Object> graph(@RequestParam(value = "limit",required = false) Integer limit) {
-        return bnService.graph(limit == null ? 100 : limit);
+        return bnService.graph();
     }
 }

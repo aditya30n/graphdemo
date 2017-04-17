@@ -1,9 +1,10 @@
 package com.ebay.seo.graph.domain.node;
 
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.neo4j.ogm.annotation.*;
+import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Index;
+import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Relationship;
 
 import java.util.Map;
 
@@ -61,10 +62,11 @@ public class BrowseNode {
         return categoryId;
     }
 
-    public BrowseNode(){
+    public BrowseNode() {
 
     }
-    public BrowseNode(String title){
+
+    public BrowseNode(String title) {
         this.title = title;
     }
 
@@ -93,7 +95,7 @@ public class BrowseNode {
         this.qualityScore = qualityScore;
     }
 
-    public void toMap(Map<String , Object > map){
+    public void toMap(Map<String, Object> map) {
         map.put("Title", title);
         map.put("Id", id);
     }

@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @EntityScan("com.ebay.seo.graph.domain.node")
 public class GraphDemoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(GraphDemoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GraphDemoApplication.class, args);
+    }
 }

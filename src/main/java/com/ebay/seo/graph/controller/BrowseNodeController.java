@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@RestController("/")
+@RestController
 public class BrowseNodeController {
 
     final BrowseNodeService bnService;
@@ -18,8 +18,23 @@ public class BrowseNodeController {
         this.bnService = bnService;
     }
 
-    @RequestMapping("/graph")
-    public Map<String, Object> graph(@RequestParam(value = "limit",required = false) Integer limit) {
-        return bnService.graph();
+//    @RequestMapping("/graph")
+//    public Map<String, Object> graph(@RequestParam(value = "limit",required = false) Integer limit) {
+//        return bnService.graph();
+//    }
+    @RequestMapping("/create")
+    public Map<String, Object> createSingle
+            (
+            @RequestParam(value = "label",required = false) String label,
+            @RequestParam(value = "id",required = false) Long id,
+             @RequestParam(value = "title",required = false) String title ) {
+        return bnService.createSingle(label,id,title);
     }
+
+    @RequestMapping("/deleteAll")
+    public boolean deleteAll (){
+
+        return bnService.deleteAll() ;
+}
+
 }

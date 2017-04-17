@@ -1,42 +1,21 @@
 package com.ebay.seo.graph.services;
 
 
+import java.security.SecureRandom;
 import java.util.*;
 
 import com.ebay.seo.graph.domain.node.BrowseNode;
-import com.ebay.seo.graph.repositories.BrowseNodeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ebay.seo.graph.domain.node.Product;
+import org.neo4j.ogm.session.Session;
+import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BrowseNodeService {
 
-    @Autowired
-    BrowseNodeRepository bnRepository;
+    private SecureRandom random = new SecureRandom();
 
-//    private Map<String, Object> toD3Format(Collection<BrowseNode> bn) {
-//        List<Map<String, Object>> nodes = new ArrayList<>();
-//        List<Map<String, Object>> rels = new ArrayList<>();
-//        int i = 0;
-//        Iterator<Movie> result = movies.iterator();
-//        while (result.hasNext()) {
-//            Movie movie = result.next();
-//            nodes.add(map("title", movie.getTitle(), "label", "movie"));
-//            int target = i;
-//            i++;
-//            for (Role role : movie.getRoles()) {
-//                Map<String, Object> actor = map("title", role.getPerson().getName(), "label", "actor");
-//                int source = nodes.indexOf(actor);
-//                if (source == -1) {
-//                    nodes.add(actor);
-//                    source = i++;
-//                }
-//                rels.add(map("source", source, "target", target));
-//            }
-//        }
-//        return map("nodes", nodes, "links", rels);
-//    }
+
 
     private Map<String, Object> map(String key1, Object value1, String key2, Object value2) {
         Map<String, Object> result = new HashMap<String, Object>(2);
@@ -45,22 +24,40 @@ public class BrowseNodeService {
         return result;
     }
 
-    @Transactional(readOnly = true)
-    public Map<String, Object>  graph() {
-        Collection<BrowseNode> result = bnRepository.graph();
 
+    public Map<String,Object> createSingle(String label, Long id, String title) {
+        SessionFactory sessionFactory = new SessionFactory("com.ebay.seo.graph.domain.node");
+        Session session = sessionFactory.openSession();
         List<Map<String, Object>> nodes = new ArrayList<>();
         List<Map<String, Object>> rels = new ArrayList<>();
-        Iterator<BrowseNode> iter = result.iterator();
-        while (iter.hasNext()) {
-            BrowseNode bn = iter.next();
-            nodes.add(map("title",bn.getTitle(),"label","title"));
-        }
-//        nodes.add(map("title", "test", "label", "test2"));
+        BrowseNode bn = new BrowseNode();
+        bn.setTitle(title);
+        bn.setSiteId(random.nextInt());
+        bn.setCategoryId(random.nextLong());
+        bn.setShortTitle(Long.toString(random.nextLong()));
+        bn.setQualityScore(random.nextDouble());
+
+        Product product = new Product();
+        product.setMaturityScore(2.0);
+        bn.setProduct(product);
+        product.setBn(bn);
+
+        session.save(bn);
+
+        Map<String, Object> map = new HashMap<>();
+        bn.toMap(map);
+        nodes.add(map);
+
         return map("nodes", nodes, "links", rels);
+    }
 
-//        return toD3Format(result);
+    public boolean deleteAll() {
+        SessionFactory sessionFactory = new SessionFactory("com.ebay.seo.graph.domain.node");
+        Session session = sessionFactory.openSession();
+        session.deleteAll(BrowseNode.class);
+        session.deleteAll(Product.class);
 
+        return true;
     }
 }
 
